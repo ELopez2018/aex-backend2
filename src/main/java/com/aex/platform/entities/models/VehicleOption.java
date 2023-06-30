@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.entities.models;
+package com.aex.platform.entities.models;
 
 import lombok.Data;
 

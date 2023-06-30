@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.token;
+package com.aex.platform.token;
 
 import java.util.List;
 import java.util.Optional;

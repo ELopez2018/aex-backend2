@@ -15,7 +15,7 @@ import lombok.Data;
 public class TransactionCreateDto {
     private Long clientId;
     private Long recipientId;
-    private Long statusId;
+    private String status;
     private Long cashierId;
     private Long issuingBankId;
     private Long receivingBankId;

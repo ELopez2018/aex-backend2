@@ -14,8 +14,8 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/target/serviceorders-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/target/mscio-bank-transfer-0.0.1-SNAPSHOT.jar .
 ENV PORT 7000
 EXPOSE $PORT
 
-ENTRYPOINT ["java", "-jar", "./serviceorders-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "./mscio-bank-transfer-0.0.1-SNAPSHOT.jar"]

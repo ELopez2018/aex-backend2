@@ -2,24 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.afrac.serviceorders.entities;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.Collection;
-import java.util.List;
+package com.aex.platform.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
- *
  * @author estar
  */
 
@@ -29,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends EntityBase implements UserDetails {
+public class User {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +32,12 @@ public class User extends EntityBase implements UserDetails {
 
   @Column(name = "nickname")
   private String nickname;
+
+  @Column(name = "fullName")
+  private String fullName;
+
+  @Column(name = "image")
+  private String image;
 
   @Column(name = "password")
   private String password;
@@ -53,12 +54,13 @@ public class User extends EntityBase implements UserDetails {
   @Column(name = "surname")
   private String surname;
 
-  @Column(name = "documentNumber")
-  @NotNull(message = "EL Numerom de Documento es obligatorio")
+  @Column(name = "document_number")
+  @NotNull(message = "EL Numero de Documento es obligatorio")
   private Long documentNumber;
 
-  @Column(name = "documenType")
-  private String documenType;
+  @Column(name = "document_type")
+  @NotNull(message = "EL tipo de Documento es obligatorio")
+  private String documentType;
 
   @Column(name = "cellPhone")
   private String cellPhone;
@@ -67,6 +69,7 @@ public class User extends EntityBase implements UserDetails {
   private String phone;
 
   @Column(name = "email")
+  @NotNull(message = "EL Email  es obligatorio")
   private String email;
 
   @Column(name = "coordinate")
@@ -79,44 +82,17 @@ public class User extends EntityBase implements UserDetails {
   private Double balance;
 
   @Column(name = "postpaid")
-  private Boolean postpaid
+  private Boolean postpaid;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
-
-
-  @Override
-  public String getPassword() {
-    return password;
-  }
-
-  @Override
-  public String getUsername() {
-    return email;
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
- @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return role.getAuthorities();
-  }
+  @Column(name = "created_at")
+  public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+  ;
+  @Column(name = "updated_at")
+  public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+  ;
+  @Column(name = "deleted_at")
+  public LocalDateTime deletedAt;
 }

@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.auth;
+package com.aex.platform.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

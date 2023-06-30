@@ -5,15 +5,13 @@
  */
 package com.aex.platform.repository;
 
-import com.aex.platform.entities.Transaction;
+import com.aex.platform.entities.Bank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author estar
  */
-public interface TransactionsRepository extends JpaRepository<Transaction, Long> {
+public interface BankRepository extends JpaRepository<Bank, Long> {
     
-    
-   
 }

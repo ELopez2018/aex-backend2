@@ -1,7 +1,6 @@
-package com.aex.security;
+package com.aex.platform.entities;
 
-import com.aex.entities.User;
-import com.aex.repositories.UserRepository;
+import com.aex.platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

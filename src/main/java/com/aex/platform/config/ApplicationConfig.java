@@ -1,7 +1,7 @@
-package com.afrac.serviceorders.config;
+package com.aex.platform.config;
 
 
-import com.afrac.serviceorders.repository.UserRepository;
+import com.aex.platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +20,11 @@ public class ApplicationConfig {
 
   private final UserRepository repository;
 
+  private final UserDetailsService userDetailsService;
+
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> repository.findByEmail(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    return email ->userDetailsService.loadUserByUsername(email);
   }
 
   @Bean

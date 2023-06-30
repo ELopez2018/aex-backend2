@@ -2,28 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/RestController.java to edit this template
  */
-package com.aex.microservicetransactions.controllers;
+package com.aex.platform.controllers;
 
-import com.aex.microservicetransactions.entities.Status;
-import com.aex.microservicetransactions.repossitory.StatusRepository;
+import com.aex.platform.entities.Status;
+import com.aex.platform.repository.StatusRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
  * @author estar
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/status")
 @Tag(name = "Status")
 public class StatusRestController {

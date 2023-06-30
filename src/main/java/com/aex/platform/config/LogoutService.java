@@ -1,6 +1,6 @@
-package com.afrac.serviceorders.config;
+package com.aex.platform.config;
 
-import com.afrac.serviceorders.token.TokenRepository;
+import com.aex.platform.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

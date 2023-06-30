@@ -1,6 +1,8 @@
-package com.afrac.serviceorders.config;
+package com.aex.platform.config;
 
-import com.afrac.serviceorders.entities.User;
+import com.aex.platform.entities.User;
+import com.aex.platform.entities.UserDetailsImpl;
+import com.aex.platform.entities.dtos.UserAdapter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -54,19 +56,16 @@ public class JwtService {
 
   private String buildToken(
           Map<String, Object> extraClaims,
-          User userDetails,
+          User user,
           long expiration
   ) {
+    UserDetails userDetails = new UserDetailsImpl(user);
     Map<String, Object> claims = new HashMap<>();
-    extraClaims.put("id", userDetails.getId());
-    extraClaims.put("nickname", userDetails.getNickname());
-    extraClaims.put("names", userDetails.getNames());
-    extraClaims.put("lastnames", userDetails.getLastNames());
-    extraClaims.put("rol", userDetails.getRole());
+    extraClaims.put("user", new UserAdapter(user));
     return Jwts
             .builder()
             .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
+            .setSubject(user.getEmail())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)

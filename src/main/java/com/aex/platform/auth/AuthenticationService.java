@@ -1,11 +1,11 @@
-package com.afrac.serviceorders.auth;
+package com.aex.platform.auth;
 
-import com.afrac.serviceorders.config.JwtService;
-import com.afrac.serviceorders.entities.User;
-import com.afrac.serviceorders.repository.UserRepository;
-import com.afrac.serviceorders.token.Token;
-import com.afrac.serviceorders.token.TokenRepository;
-import com.afrac.serviceorders.token.TokenType;
+import com.aex.platform.config.JwtService;
+import com.aex.platform.entities.User;
+import com.aex.platform.repository.UserRepository;
+import com.aex.platform.token.Token;
+import com.aex.platform.token.TokenRepository;
+import com.aex.platform.token.TokenType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +29,11 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
+  private final UserDetailsService userDetailsService;
   public AuthenticationResponse register(RegisterRequest request) {
     var user = User.builder()
-            .names(request.getNames())
-            .lastNames(request.getLastNames())
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(request.getRole())
@@ -102,7 +105,8 @@ public class AuthenticationService {
     if (userEmail != null) {
       var user = this.repository.findByEmail(userEmail)
               .orElseThrow();
-      if (jwtService.isTokenValid(refreshToken, user)) {
+      UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+      if (jwtService.isTokenValid(refreshToken, userDetails)) {
         var accessToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);

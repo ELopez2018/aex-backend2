@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.auth;
+package com.aex.platform.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

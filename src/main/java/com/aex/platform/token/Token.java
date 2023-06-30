@@ -1,7 +1,7 @@
-package com.afrac.serviceorders.token;
+package com.aex.platform.token;
 
 
-import com.afrac.serviceorders.entities.User;
+import com.aex.platform.entities.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -3,22 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.aex.microserviceusers.entities;
+package com.aex.platform.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.DynamicInsert;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  *
@@ -27,8 +19,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Data
 @Entity
 @Table(name = "bank_data")
-@DynamicInsert
-public class BankData extends EnitityBase {
+public class BankData {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,5 +38,14 @@ public class BankData extends EnitityBase {
     
     @Column(name ="type")    
     private String type;
+
+    @Column(name = "created_at")
+    public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "updated_at")
+    public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "deleted_at")
+    public LocalDateTime deletedAt;
     
 }

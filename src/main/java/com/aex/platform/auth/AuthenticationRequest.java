@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.auth;
+package com.aex.platform.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

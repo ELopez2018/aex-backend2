@@ -1,5 +1,8 @@
-# AFRAC
-AUTOMOTIVE FAILURE REGISTRATION AND CONTROL SYSTEM.
+# AEX
+ArriExchange International.
+
+"We provide solutions in transactions and means of payment that contribute to the well-being and development of our stakeholders with innovation and excellence."
+
 This project demonstrates the implementation of security using Spring Boot 3.0 and JSON Web Tokens (JWT). It includes the following features:
 
 ## Features
@@ -32,5 +35,5 @@ To build and run the project, follow these steps:
 * Build the project: mvn clean install
 * Run the project: mvn spring-boot:run 
 
--> The application will be available at http://localhost:8080.
-# afrac
+The application will be available at http://localhost:8080.
+# AEX

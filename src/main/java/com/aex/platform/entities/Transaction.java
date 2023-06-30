@@ -3,20 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.aex.microservicetransactions.entities;
+package com.aex.platform.entities;
 
-import java.util.Currency;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "transactions")
-@DynamicInsert
-@DynamicUpdate
-public class Transaction extends EnitityBase {
+public class Transaction  {
 
     @Id
     @Column(name = "id")
@@ -25,19 +30,19 @@ public class Transaction extends EnitityBase {
 
     @OneToOne
     @JoinColumn(name = "client_id")
-    private Client client;
+    private User client;
 
     @OneToOne
     @JoinColumn(name = "recipient_id")
     private User recipient;
 
     @OneToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
+    @JoinColumn(name = "cashier_id", nullable = true)
+    private User cashier;
 
     @OneToOne
-    @JoinColumn(name = "cashier_id")
-    private User cashier;
+    @JoinColumn(name = "correspondent_id")
+    private Correspondent correspondent;
 
     @OneToOne
     @JoinColumn(name = "issuing_bank_id")
@@ -47,9 +52,8 @@ public class Transaction extends EnitityBase {
     @JoinColumn(name = "receiving_bank_id")
     private BankData receivingBank;
 
-    @OneToOne
-    @JoinColumn(name = "correspondent_id")
-    private Correspondent correspondent;
+    @Column(name = "status",nullable = true)
+    private String status;
 
     @Column(name = "amount_sent")
     private Double amountSent;
@@ -59,6 +63,15 @@ public class Transaction extends EnitityBase {
     
     @Column(name = "images")
     private String images;
+
+    @Column(name = "created_at")
+    public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "updated_at")
+    public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "deleted_at")
+    public LocalDateTime deletedAt;
     
     
 }

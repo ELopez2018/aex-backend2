@@ -3,26 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.aex.microserviceusers.entities;
+package com.aex.platform.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  *
  * @author estar
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "banks")
-@DynamicInsert
-public class Bank extends EnitityBase {
+public class Bank {
 
     @Id
     @Column(name = "id")
@@ -37,4 +41,13 @@ public class Bank extends EnitityBase {
 
     @Column(name = "swift")
     private String swift;
+
+    @Column(name = "created_at")
+    public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "updated_at")
+    public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "deleted_at")
+    public LocalDateTime deletedAt;
 }

@@ -1,8 +1,9 @@
-package com.afrac.serviceorders.config;
+package com.aex.platform.config;
 
 
-import com.afrac.serviceorders.entities.Permission;
-import com.afrac.serviceorders.entities.Role;
+import com.aex.platform.entities.Permission;
+import com.aex.platform.entities.Role;
+import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.rmi.ServerException;
 import java.util.Arrays;
 
 import static org.springframework.http.HttpMethod.DELETE;
@@ -41,7 +43,7 @@ public class SecurityConfiguration {
   private final CorsConfigurationOrigin corsConfigurationOrigin;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception, ServerException, ServletException {
     http
             .csrf()
             .disable()

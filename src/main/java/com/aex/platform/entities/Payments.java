@@ -2,32 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.aex.microservicetransactions.entities;
+package com.aex.platform.entities;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import lombok.Data;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  *
  * @author estar
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "payments")
-@DynamicInsert
-@DynamicUpdate
-public class Payments extends EnitityBase {
+public class Payments  {
 
     @Id
     @Column(name = "id")
@@ -46,5 +42,14 @@ public class Payments extends EnitityBase {
 
     @Column(name = "details")
     private String details;
+
+    @Column(name = "created_at")
+    public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "updated_at")
+    public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+    @Column(name = "deleted_at")
+    public LocalDateTime deletedAt;
 
 }

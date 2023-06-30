@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.config;
+package com.aex.platform.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -13,16 +13,16 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "AFRAC",
+                        name = "AEX",
                         email = "Estarlin.elv@gmail.com",
-                        url = "#"
+                        url = "https://aex.com.co/"
                 ),
                 description = "OpenApi documentation for Spring Security",
-                title = "OpenApi specification - AFRAC",
+                title = "OpenApi specification - AEX",
                 version = "1.0",
                 license = @License(
                         name = "Licence name",
-                        url = "https://some-url.com"
+                        url = "https://aex.com.co/"
                 ),
                 termsOfService = "Terms of service"
         ),
@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "PROD ENV",
-                        url = "AFRAC"
+                        url = "https://aex.com.co/"
                 )
         },
         security = {

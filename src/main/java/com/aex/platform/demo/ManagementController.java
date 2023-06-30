@@ -1,4 +1,4 @@
-package com.afrac.serviceorders.demo;
+package com.aex.platform.demo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

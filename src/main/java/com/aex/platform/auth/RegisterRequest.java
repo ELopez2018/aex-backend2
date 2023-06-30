@@ -1,7 +1,7 @@
-package com.afrac.serviceorders.auth;
+package com.aex.platform.auth;
 
 
-import com.afrac.serviceorders.entities.Role;
+import com.aex.platform.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +15,8 @@ public class RegisterRequest {
 
   private String documentType;
   private String documentNumber;
-  private String names;
-  private String lastNames;
+  private String firstName;
+  private String lastName;
   private String address;
   private String cellPhone;
   private String email;
