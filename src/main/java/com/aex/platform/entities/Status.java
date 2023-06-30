@@ -2,10 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.afrac.serviceorders.entities;
+package com.aex.microservicetransactions.entities;
 
-
-import jakarta.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -16,18 +20,18 @@ import org.hibernate.annotations.DynamicUpdate;
  */
 @Data
 @Entity
-@Table(name = "roles")
+@Table(name = "status")
 @DynamicInsert
 @DynamicUpdate
-public class Rol extends EntityBase {
+public class Status extends EnitityBase {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "description")
     private String description;

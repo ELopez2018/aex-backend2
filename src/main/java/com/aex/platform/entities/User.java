@@ -30,59 +30,60 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 public class User extends EntityBase implements UserDetails {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  protected Long id;
 
-    @Column(name = "nickname", unique = true)
-    private String nickname;
+  @Column(name = "nickname")
+  private String nickname;
 
-    @Column(name = "password")
-    private String password;
+  @Column(name = "password")
+  private String password;
 
-   @NotBlank(message = "El campo Nombres no debe estar vacio.")
-    @Column(name = "names")
-    private String names;
+  @Column(name = "firstName")
+  private String firstName;
 
-    @NotBlank(message = "El campo Apellidos no debe estar vacio.")
-    @Column(name = "lastNames")
-    private String lastNames;
+  @Column(name = "secondName")
+  private String secondName;
 
-    @Column(name = "documentNumber")
-    private Long documentNumber;
+  @Column(name = "lastName")
+  private String lastName;
 
-    @Column(name = "documentType")
-    private String documentType;
+  @Column(name = "surname")
+  private String surname;
 
-    @Column(name = "cellPhone")
-    private Long cellPhone;
+  @Column(name = "documentNumber")
+  @NotNull(message = "EL Numerom de Documento es obligatorio")
+  private Long documentNumber;
 
-    @Column(name = "phone")
-    private Long phone;
+  @Column(name = "documenType")
+  private String documenType;
 
-    @NotBlank(message = "El campo Placa no debe estar vacio.")
-    @Column(unique = true, name = "email")
-    private String email;
+  @Column(name = "cellPhone")
+  private String cellPhone;
+
+  @Column(name = "phone")
+  private String phone;
+
+  @Column(name = "email")
+  private String email;
+
+  @Column(name = "coordinate")
+  private String coordinate;
+
+  @Column(name = "maximum_amount")
+  private Double maximumAmount;
+
+  @Column(name = "balance")
+  private Double balance;
+
+  @Column(name = "postpaid")
+  private Boolean postpaid
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "owner")
-    private List<Vehicle> vehicleOwners;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "driver")
-    private List<Vehicle> vehicleDrivers;
-
-  @JsonIgnore
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-  private List<ServiceOrder> serviceOrdersOwner;
-
-  @JsonIgnore
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "driver")
-  private List<ServiceOrder> serviceOrdersDriver;
 
 
   @Override
