@@ -5,6 +5,7 @@
 package com.aex.platform.controllers;
 
 import com.aex.platform.entities.Correspondent;
+import com.aex.platform.entities.Transaction;
 import com.aex.platform.entities.User;
 import com.aex.platform.entities.dtos.CorrespondentDTO;
 import com.aex.platform.repository.CorrespondentRepository;
@@ -49,6 +50,18 @@ public class CorrespondentsRestController {
   @GetMapping("/{id}")
   public Object get(@PathVariable String id) {
     return null;
+  }
+
+  @GetMapping("/search/{userId}")
+  public ResponseEntity<?> getCorrespondentsByUserId(@PathVariable long userId) {
+    Optional<List<Correspondent>> correspondentOptional = correspondentRepository.findAllByUserId(userId);
+    if(correspondentOptional.isPresent()){
+      return ResponseEntity.status(HttpStatus.OK).body(correspondentOptional.get());
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+              .body(Collections.singletonMap("error","No se encontró."));
+    }
+
   }
 
   @PutMapping("/{id}")

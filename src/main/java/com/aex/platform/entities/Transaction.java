@@ -5,6 +5,7 @@
  */
 package com.aex.platform.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 
 @Data
@@ -28,35 +30,47 @@ public class Transaction  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "recipient_id")
     private User recipient;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cashier_id", nullable = true)
     private User cashier;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "correspondent_id")
     private Correspondent correspondent;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "issuing_bank_id")
     private BankData issuingBank;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "receiving_bank_id")
     private BankData receivingBank;
 
     @Column(name = "status",nullable = true)
-    private String status;
+    private Long status;
 
     @Column(name = "amount_sent")
     private Double amountSent;
+
+    @Column(name = "date_sent")
+    private Long dateSend;
+
+    @Column(name = "date_Receive")
+    private Long dateReceive;
+
+    @Column(name = "Currency_From")
+    private String currencyFrom;
+
+    @Column(name = "Currency_To")
+    private String currencyTo;
 
     @Column(name = "amount_received")
     private Double amountReceived;
@@ -72,6 +86,11 @@ public class Transaction  {
 
     @Column(name = "deleted_at")
     public LocalDateTime deletedAt;
-    
-    
+
+    @Column(name = "observations", length = 1000)
+    public String observations;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "transaction")
+    private List<Voucher> voucherList;
 }

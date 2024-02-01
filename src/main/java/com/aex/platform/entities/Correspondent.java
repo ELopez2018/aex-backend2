@@ -4,6 +4,7 @@
  */
 package com.aex.platform.entities;
 
+import com.aex.platform.entities.dtos.UserAdapter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,4 +56,8 @@ public class Correspondent  {
     public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));;
     @Column(name = "deleted_at")
     public LocalDateTime deletedAt;
+
+    public User getUser() {
+        return new UserAdapter(user);
+    }
 }

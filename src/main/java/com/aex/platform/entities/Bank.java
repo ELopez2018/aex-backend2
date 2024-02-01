@@ -33,6 +33,10 @@ public class Bank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
     @Column(name = "name")
     private String name;
 

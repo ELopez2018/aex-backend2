@@ -42,13 +42,21 @@ public enum Role {
           Permission.MANAGER_CREATE
       )
   ),
-  TECHNICAL(
+  CASHIER(
           Set.of(
                   Permission.MANAGER_READ,
                   Permission.MANAGER_UPDATE,
                   Permission.MANAGER_DELETE,
                   Permission.MANAGER_CREATE
           )
+  ),
+  CORRESPONDENT(
+      Set.of(
+          Permission.MANAGER_READ,
+          Permission.MANAGER_UPDATE,
+          Permission.MANAGER_DELETE,
+          Permission.MANAGER_CREATE
+      )
   ),
   CLIENT(
       Set.of(

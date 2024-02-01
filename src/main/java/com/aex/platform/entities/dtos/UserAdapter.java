@@ -1,9 +1,14 @@
 package com.aex.platform.entities.dtos;
 
+import com.aex.platform.entities.BankData;
+import com.aex.platform.entities.Role;
 import com.aex.platform.entities.User;
+import jakarta.persistence.EnumType;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @AllArgsConstructor
 public class UserAdapter extends User {
@@ -90,21 +95,34 @@ public class UserAdapter extends User {
     return user.getBalance();
   }
 
+
+  @Override
+  public Role getRole() {
+    return user.getRole();
+  }
+
   @Override
   public Boolean getPostpaid() {
     return user.getPostpaid();
   }
 
   @Override
-  public LocalDateTime getCreatedAt() {
+  public String getCreatedAt() {
     return user.getCreatedAt();
   }
+
   @Override
-  public LocalDateTime getUpdatedAt() {
+  public String getUpdatedAt() {
     return user.getCreatedAt();
   }
+
   @Override
-  public LocalDateTime  getDeletedAt() {
+  public String getDeletedAt() {
     return user.getDeletedAt();
+  }
+
+  @Override
+  public List<BankData> getBankDataList() {
+    return user.getBankDataList();
   }
 }

@@ -32,6 +32,14 @@ public class UserService {
         .maximumAmount(request.getMaximumAmount())
         .balance(request.getBalance())
 
+        .createdAt(request.getCreatedAt())
+        .deletedAt(request.getDeletedAt())
+        .image(request.getImage())
+        .gender(request.getGender())
+        .birthdate(request.getBirthdate())
+        .coordinate(request.getCoordinate())
+        .confirmedEmail(request.getConfirmedEmail())
+
         .fullName(request.getFullName())
         .postpaid(request.getPostpaid())
         .lastName(request.getLastName())

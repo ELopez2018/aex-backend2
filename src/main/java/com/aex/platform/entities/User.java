@@ -4,6 +4,8 @@
  */
 package com.aex.platform.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +14,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author estar
@@ -39,6 +42,7 @@ public class User {
   @Column(name = "image")
   private String image;
 
+  //@JsonIgnore
   @Column(name = "password")
   private String password;
 
@@ -54,7 +58,13 @@ public class User {
   @Column(name = "surname")
   private String surname;
 
-  @Column(name = "document_number")
+  @Column(name = "birthdate")
+  private String birthdate;
+
+  @Column(name = "gender")
+  private String gender;
+
+  @Column(name = "document_number", unique = true)
   @NotNull(message = "EL Numero de Documento es obligatorio")
   private Long documentNumber;
 
@@ -68,9 +78,15 @@ public class User {
   @Column(name = "phone")
   private String phone;
 
+  @Column(name = "current_country_id", nullable = true)
+  private Long currentCountry;
+
   @Column(name = "email")
-  @NotNull(message = "EL Email  es obligatorio")
+  @NotNull(message = "EL Email es obligatorio")
   private String email;
+
+  @Column(name = "confirmed_email")
+  private String confirmedEmail;
 
   @Column(name = "coordinate")
   private String coordinate;
@@ -88,11 +104,16 @@ public class User {
   private Role role;
 
   @Column(name = "created_at")
-  public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
-  ;
+  public String createdAt;
+
   @Column(name = "updated_at")
-  public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
-  ;
+  public String updatedAt;
+
   @Column(name = "deleted_at")
-  public LocalDateTime deletedAt;
+  public String deletedAt;
+
+  @JsonManagedReference
+  @OneToMany(mappedBy = "user")
+  private List<BankData> bankDataList;
+
 }

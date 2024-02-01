@@ -6,7 +6,9 @@
 package com.aex.platform.controllers;
 
 import com.aex.platform.entities.BankData;
+import com.aex.platform.entities.User;
 import com.aex.platform.repository.BankDataRepository;
+import com.aex.platform.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,57 +18,74 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- *
  * @author estar
  */
 @RestController
 @RequestMapping("/bankdata")
 @Tag(name = "Datos bancarios")
 public class BankDataRestController {
-    
+
     @Autowired
     BankDataRepository bankDataRepository;
-    
+
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping()
     public List<BankData> list() {
         return bankDataRepository.findAll();
     }
-    
+
     @GetMapping("/{id}")
     public BankData get(@PathVariable String id) {
         return null;
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
         return null;
     }
-    
+
     @PostMapping
-    public ResponseEntity<?> post(@Valid  @RequestBody BankData input, BindingResult result) {
+    public ResponseEntity<?> post(@Valid @RequestBody BankData input, BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
         }
-        BankData save = bankDataRepository.save(input);
-        System.out.println(save);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(save);
+        try {
+            BankData save = bankDataRepository.save(input);
+            return ResponseEntity.status(HttpStatus.CREATED).body(save);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+        }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         return null;
     }
-    
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getBankDatabyUserId(@PathVariable Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<List<BankData>> optionalBankData = bankDataRepository.findAllByUserId(userId);
+
+        if (optionalBankData.isPresent()) {
+            return ResponseEntity.ok().body(optionalBankData.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Error message")
     public void handleError() {
     }
+
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err -> {
@@ -74,5 +93,5 @@ public class BankDataRestController {
         });
         return ResponseEntity.badRequest().body(errores);
     }
-    
+
 }

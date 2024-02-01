@@ -13,7 +13,33 @@ services:
     restart: always
     networks:
       - aex
-
+  mysql8:
+    container_name: mysql8
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 181277
+      MYSQL_DATABASE: aex_webapp_1
+    volumes:
+      - data-mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - aex
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:5
+    ports:
+      - "7080:80"
+    restart: always
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=128M
+      - MAX_EXECUTION_TIME=128M
+    networks:
+      - aex
+    depends_on:
+      - mysql8
   aex-system:
     container_name: aex-system
     image: estarlinlopez/aex
@@ -37,6 +63,8 @@ services:
 volumes:
   data-postgres:
     name: data-postgres
+  data-mysql:
+    name: data-mysql
 
 networks:
   aex:

@@ -6,6 +6,8 @@
 package com.aex.platform.entities;
 
 
+import com.aex.platform.entities.dtos.UserAdapter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,8 +25,9 @@ public class BankData {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id; 
-    
+    protected Long id;
+
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -40,12 +43,15 @@ public class BankData {
     private String type;
 
     @Column(name = "created_at")
-    public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+    public LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    public LocalDateTime updatedAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
+    public LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     public LocalDateTime deletedAt;
-    
+
+    public User getUser() {
+        return new UserAdapter(user);
+    }
 }

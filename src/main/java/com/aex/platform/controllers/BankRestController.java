@@ -9,6 +9,7 @@ import com.aex.platform.entities.Bank;
 import com.aex.platform.repository.BankRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,9 +36,15 @@ public class BankRestController {
     return null;
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> put(@PathVariable String id, @RequestBody Bank input) {
-    return null;
+  @GetMapping("/by-country/{id}")
+  public ResponseEntity<?> getAllByCountry(@PathVariable Long id) {
+
+    try {
+      List<Bank> banks = bankRepository.findAllByCountryId(id);
+      return ResponseEntity.status(HttpStatus.OK).body(banks);
+    } catch (ResponseStatusException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+    }
   }
 
   @PostMapping

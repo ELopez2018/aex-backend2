@@ -52,4 +52,7 @@ public class Payments  {
     @Column(name = "deleted_at")
     public LocalDateTime deletedAt;
 
+    @Column(name = "approved")
+    public String approved;
+
 }
