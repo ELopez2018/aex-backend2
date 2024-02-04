@@ -13,6 +13,7 @@ import com.aex.platform.entities.dtos.UserAdapter;
 import com.aex.platform.repository.TransactionsRepository;
 import com.aex.platform.repository.UserRepository;
 import com.aex.platform.service.ApiService;
+import com.aex.platform.service.BalanceService;
 import com.aex.platform.service.UserService;
 import com.aex.platform.service.WebSocketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,6 +53,9 @@ public class UserRestController {
 
     @Autowired
     WebSocketService chat;
+
+    @Autowired
+    BalanceService balanceService;
 
     @GetMapping()
     public ResponseEntity<?> findAll() {
@@ -194,12 +198,12 @@ public class UserRestController {
         });
         return ResponseEntity.badRequest().body(errores);
     }
+    @GetMapping("/getBalance")
+    public ResponseEntity<?> getBalance(@RequestParam Long userId) {
+        System.out.println(userId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(Collections.singletonMap("user", balanceService.getBalance(userId)));
 
-    @GetMapping("/chat")
-    private ResponseEntity<String> chat() {
-        System.out.println("LLEGA AL ENDPOIT");
-       chat.sendMessage();
-        return ResponseEntity.ok().body("enviado");
     }
 
 }

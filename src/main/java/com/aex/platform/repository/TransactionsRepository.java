@@ -27,6 +27,11 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
           "order by t.id")
   List<Transaction> findAllByStatusIn(@Param("statusId") Collection<Long>  statusId);
 
-  //(@Param("names") Collection<String> names);
+  @Query("SELECT SUM(t.amountSent) FROM Transaction t "
+          + "WHERE 1=1 "
+          + "AND t.correspondent.user.id = :userId "
+          + "AND t.status <> 3"
+  )
+  Double getTransactionTotal(@Param("userId") Long userId);
 
 }

@@ -9,12 +9,12 @@ import com.aex.platform.entities.*;
 import com.aex.platform.entities.dtos.MobilePaymentDto;
 import com.aex.platform.repository.*;
 import com.aex.platform.service.MobilePaymentService;
+import com.aex.platform.service.TransactionService;
 import com.aex.platform.service.WebSocketService;
 import dtos.TransactionCreateDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +51,9 @@ public class TransactionsRestController {
     @Autowired
     WebSocketService webSocketService;
 
+    @Autowired
+    TransactionService transactionService;
+
 
     @GetMapping()
     public List<Transaction> list() {
@@ -71,41 +74,7 @@ public class TransactionsRestController {
 
     @PostMapping
     public ResponseEntity<?> post(@RequestBody TransactionCreateDto[] data) {
-
-        for(TransactionCreateDto item:data ){
-            Optional<User> clientO = userRepository.findById(item.getClientId());
-            Optional<User> recipientO = userRepository.findById(item.getRecipientId());
-            Optional<BankData> receivingBankO = bankDataRepository.findById(item.getReceivingBankId());
-            Optional<Correspondent> correspondentO = correspondentRepository.findById(item.getCorrespondentId());
-
-
-        if (!correspondentO.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Collections.singletonMap("error", "No esta autorizado para realizar giros a terceros."));
-        }
-        Correspondent correspondent = correspondentO.get();
-        if ((correspondent.getUser().getBalance() - item.getAmountSent()) <= 0 && correspondent.getUser().getPostpaid() == false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Collections.singletonMap("error", "No posee saldo a favor."));
-        }
-
-        if (correspondent.getUser().getPostpaid() && (correspondent.getUser().getMaximumAmount() + (correspondent.getUser().getBalance() - item.getAmountSent())) < 0) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Collections.singletonMap("error", "No posee suficiente saldo para realizar esta operacion." + (correspondent.getUser().getMaximumAmount() + (correspondent.getUser().getBalance() - item.getAmountSent()))));
-        }
-
-        Transaction transaction = new Transaction();
-
-        transaction.setClient(clientO.get());
-        transaction.setRecipient(recipientO.get());
-        transaction.setStatus(statusRepository.findById(1L).get().getId());
-        transaction.setCorrespondent(correspondentO.get());
-        transaction.setReceivingBank(receivingBankO.get());
-        transaction.setAmountReceived(item.getAmountReceived());
-        transaction.setAmountSent(item.getAmountSent());
-        Transaction save = transactionsRepository.save(transaction);
-        }
-        return ResponseEntity.ok("entro");
+        return transactionService.create(data);
     }
 
     @DeleteMapping("/{id}")
@@ -131,7 +100,11 @@ public class TransactionsRestController {
     private ResponseEntity<?> updateTransactions(@PathVariable Long[] statusIds) {
         Map<String, String> errores = new HashMap<>();
         try {
-            return ResponseEntity.ok().body(webSocketService.sendTrans(statusIds));
+            if (webSocketService.updateInfoWebSocket(statusIds)) {
+                return ResponseEntity.ok().body(Collections.singletonMap("message", "Actualización exitosa"));
+            } else {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Un error impidio la consulta"));
+            }
         } catch (Exception e) {
             errores.put("message", e.toString());
             errores.put("details", e.getMessage());

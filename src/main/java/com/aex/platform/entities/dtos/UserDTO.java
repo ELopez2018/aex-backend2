@@ -2,6 +2,7 @@ package com.aex.platform.entities.dtos;
 
 import com.aex.platform.entities.BankData;
 import com.aex.platform.entities.Role;
+import com.aex.platform.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

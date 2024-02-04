@@ -17,4 +17,7 @@ public interface WebSocketClient {
 
     @PostMapping(value = "/chat/room",consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Boolean> transactionPending(@RequestBody List<TransactionTodo> data );
+
+    @PostMapping(value = "/chat/admin",consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> transactionInProgress(@RequestBody List<TransactionTodo> data );
 }
