@@ -18,6 +18,7 @@ public class CorsConfigurationOrigin {
     public List<String> getListAllowedOrigins(){
         List<String> origins= new ArrayList<>();
         origins.add("http://localhost:4200");
+        origins.add("http://44.203.185.19");
         return origins;
     }
 }

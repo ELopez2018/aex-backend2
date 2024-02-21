@@ -21,5 +21,9 @@ public class TransactionCreateDto {
     private Long receivingBankId;
     private Long correspondentId;
     private Double amountSent;
-    private Double amountReceived;   
+    private Double amountReceived;
+    private String currencyFrom;
+    private String currencyTo;
+    private Long dateSend;
+    private String reference;
 }

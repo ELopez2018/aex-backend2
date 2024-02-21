@@ -47,7 +47,7 @@ services:
 #      context: ./
 #      dockerfile: ./Dockerfile
     ports:
-      - "8000:7000"
+      - "7000:7000"
     environment:
       DB_HOST: postgres15
       DB_PORT: 5432
@@ -59,7 +59,16 @@ services:
     depends_on:
       - postgres15
     restart: always
-
+  aex-socket:
+    container_name: aex-socket
+    image: estarlinlopez/aex_socket
+    #    build:
+    #      context: ./
+    #      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - aex
 volumes:
   data-postgres:
     name: data-postgres

@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="aex-ms-socket", url="localhost:3000")
+@FeignClient(name="aex-ms-socket", url="host.docker.internal:3000")
 public interface WebSocketClient {
     @GetMapping("/chat/room")
     String sendMessage();
 
     @PostMapping(value = "/chat/room",consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Boolean> transactionPending(@RequestBody List<TransactionTodo> data );
+    Boolean transactionPending(@RequestBody List<TransactionTodo> data );
 
     @PostMapping(value = "/chat/admin",consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Boolean> transactionInProgress(@RequestBody List<TransactionTodo> data );
+    Boolean transactionInProgress(@RequestBody List<TransactionTodo> data );
 }

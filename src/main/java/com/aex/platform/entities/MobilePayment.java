@@ -1,12 +1,19 @@
 package com.aex.platform.entities;
 
+import com.aex.platform.entities.dtos.UserAdapter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "mobile_payments")
 public class MobilePayment extends EntityBase {
@@ -52,8 +59,12 @@ public class MobilePayment extends EntityBase {
     @JoinColumn(name = "correspondent_id")
     private Correspondent correspondent;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "mobilePayment")
-    private List<Voucher> voucherList;
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "mobilePayment")
+//    private List<Voucher> voucherList;
+
+    public User getClient() {
+        return new UserAdapter(client);
+    }
 
 }

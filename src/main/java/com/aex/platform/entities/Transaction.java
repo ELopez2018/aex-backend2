@@ -30,6 +30,9 @@ public class Transaction  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    @Column(name = "reference", unique = true)
+    private  String reference;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;

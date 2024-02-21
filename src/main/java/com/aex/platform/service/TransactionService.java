@@ -4,6 +4,8 @@ import com.aex.platform.controllers.WebSocketClient;
 import com.aex.platform.entities.*;
 import com.aex.platform.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.flogger.Flogger;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log
 public class TransactionService {
 
     @Autowired
@@ -41,7 +44,8 @@ public class TransactionService {
         List<Transaction> giros = transactionsRepository.findAllByStatusIn(statusIds);
         List<MobilePayment> pagosMobiles = mobilePaymentRepository.findAllByStatusIn(statusIds);
         List<TransactionTodo> arr =transactionTodoAdapter(giros, pagosMobiles);
-        return webSocketClient.transactionPending(arr).getBody();
+        log.info("Enviando datos al socket..");
+        return webSocketClient.transactionPending(arr);
     }
 
     private List<TransactionTodo> transactionTodoAdapter(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
@@ -85,12 +89,12 @@ public class TransactionService {
             Optional<User> recipientO = userRepository.findById(item.getRecipientId());
             Optional<BankData> receivingBankO = bankDataRepository.findById(item.getReceivingBankId());
             Optional<Correspondent> correspondentO = correspondentRepository.findById(item.getCorrespondentId());
-            if (!correspondentO.isPresent()) {
+            if (correspondentO.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Collections.singletonMap("error", "No esta autorizado para realizar giros a terceros."));
             }
             Correspondent correspondent = correspondentO.get();
-            if ((correspondent.getUser().getBalance() - item.getAmountSent()) <= 0 && correspondent.getUser().getPostpaid() == false) {
+            if ((correspondent.getUser().getBalance() - item.getAmountSent()) <= 0 && !correspondent.getUser().getPostpaid()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Collections.singletonMap("error", "No posee saldo a favor."));
             }
@@ -108,6 +112,10 @@ public class TransactionService {
             transaction.setReceivingBank(receivingBankO.get());
             transaction.setAmountReceived(item.getAmountReceived());
             transaction.setAmountSent(item.getAmountSent());
+            transaction.setDateSend(item.getDateSend());
+            transaction.setCurrencyFrom(item.getCurrencyFrom());
+            transaction.setCurrencyTo(item.getCurrencyTo());
+            transaction.setReference(item.getReference());
             Transaction save = transactionsRepository.save(transaction);
         }
        updateWebsocketTransactionsTodo(List.of(1L));

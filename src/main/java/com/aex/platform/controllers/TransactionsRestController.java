@@ -92,7 +92,7 @@ public class TransactionsRestController {
     }
 
     @PostMapping(value = "/mobile-payment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createMobilePayment(@RequestBody List<MobilePaymentDto> data) {
+    public ResponseEntity<?> createMobilePayment(@RequestBody List<MobilePayment> data) {
         return ResponseEntity.ok().body(mobilePaymentService.create(data));
     }
 
