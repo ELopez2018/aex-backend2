@@ -36,14 +36,22 @@ public enum Role {
   ),
   MANAGER(
       Set.of(
-          Permission.MANAGER_READ,
-          Permission.MANAGER_UPDATE,
-          Permission.MANAGER_DELETE,
-          Permission.MANAGER_CREATE
+              Permission.ADMIN_READ,
+              Permission.ADMIN_UPDATE,
+              Permission.ADMIN_DELETE,
+              Permission.ADMIN_CREATE,
+              Permission.MANAGER_READ,
+              Permission.MANAGER_UPDATE,
+              Permission.MANAGER_DELETE,
+              Permission.MANAGER_CREATE
       )
   ),
   CASHIER(
           Set.of(
+                  Permission.ADMIN_READ,
+                  Permission.ADMIN_UPDATE,
+                  Permission.ADMIN_DELETE,
+                  Permission.ADMIN_CREATE,
                   Permission.MANAGER_READ,
                   Permission.MANAGER_UPDATE,
                   Permission.MANAGER_DELETE,
@@ -52,20 +60,38 @@ public enum Role {
   ),
   CORRESPONDENT(
       Set.of(
-          Permission.MANAGER_READ,
-          Permission.MANAGER_UPDATE,
-          Permission.MANAGER_DELETE,
-          Permission.MANAGER_CREATE
+              Permission.ADMIN_READ,
+              Permission.ADMIN_UPDATE,
+              Permission.ADMIN_DELETE,
+              Permission.ADMIN_CREATE,
+              Permission.MANAGER_READ,
+              Permission.MANAGER_UPDATE,
+              Permission.MANAGER_DELETE,
+              Permission.MANAGER_CREATE
       )
   ),
   CLIENT(
       Set.of(
-          Permission.MANAGER_READ
+              Permission.ADMIN_READ,
+              Permission.ADMIN_UPDATE,
+              Permission.ADMIN_DELETE,
+              Permission.ADMIN_CREATE,
+              Permission.MANAGER_READ,
+              Permission.MANAGER_UPDATE,
+              Permission.MANAGER_DELETE,
+              Permission.MANAGER_CREATE
       )
   ),
   GUEST(
           Set.of(
-                  Permission.MANAGER_READ
+                  Permission.ADMIN_READ,
+                  Permission.ADMIN_UPDATE,
+                  Permission.ADMIN_DELETE,
+                  Permission.ADMIN_CREATE,
+                  Permission.MANAGER_READ,
+                  Permission.MANAGER_UPDATE,
+                  Permission.MANAGER_DELETE,
+                  Permission.MANAGER_CREATE
           )
   )
 

@@ -4,6 +4,9 @@
  */
 package com.aex.platform.controllers;
 
+import com.aex.platform.entities.Payment;
+import com.aex.platform.repository.PaymentsRepository;
+import com.aex.platform.service.PaymentsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,25 +29,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/payments")
 @Tag(name = "Pagos")
 public class PaymentsRestController {
+
+    private final PaymentsService paymentsService;
     
     @GetMapping()
-    public List<Object> list() {
-        return null;
+    public  ResponseEntity<?> getAll() {
+        return ResponseEntity.ok().body(paymentsService.findAll()) ;
     }
     
     @GetMapping("/{id}")
-    public Object get(@PathVariable String id) {
-        return null;
+    public  ResponseEntity<?>  get(@PathVariable Long id) {
+        return ResponseEntity.ok().body(paymentsService.findByPaymentId(id)) ;
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
+
         return null;
     }
     
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Object input) {
-        return null;
+    public ResponseEntity<?> create(@RequestBody Payment payment) {
+        return ResponseEntity.ok().body(paymentsService.save(payment)) ;
+
     }
     
     @DeleteMapping("/{id}")

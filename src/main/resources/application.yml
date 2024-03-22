@@ -9,13 +9,16 @@ spring:
     hibernate:
       #ddl-auto: create-drop
       #ddl-auto: create-only
-     #ddl-auto: update
+     ddl-auto: update
     show-sql: false
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  http:
+    multipart:
+      enabled: true
 
 server:
   port: ${PORT:7000}

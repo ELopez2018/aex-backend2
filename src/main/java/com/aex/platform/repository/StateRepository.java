@@ -1,6 +1,5 @@
 package com.aex.platform.repository;
 
-import com.aex.platform.entities.Payments;
 import com.aex.platform.entities.State;
 import org.springframework.data.jpa.repository.JpaRepository;
 

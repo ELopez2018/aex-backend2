@@ -14,10 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+@Log
 @Service
 public class JwtService {
 
@@ -38,6 +40,7 @@ public class JwtService {
   }
 
   public String generateToken(User userDetails) {
+    log.info("Generando token");
     return generateToken(new HashMap<>(), userDetails);
   }
 
@@ -59,6 +62,7 @@ public class JwtService {
           User user,
           long expiration
   ) {
+    log.info("Construyendo token");
     UserDetails userDetails = new UserDetailsImpl(user);
     Map<String, Object> claims = new HashMap<>();
     extraClaims.put("user", new UserAdapter(user));

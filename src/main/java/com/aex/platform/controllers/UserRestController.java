@@ -5,6 +5,7 @@
 package com.aex.platform.controllers;
 
 import com.aex.platform.auth.AuthenticationResponse;
+import com.aex.platform.common.Constants;
 import com.aex.platform.common.Utils;
 import com.aex.platform.entities.Role;
 import com.aex.platform.entities.Transaction;
@@ -19,6 +20,7 @@ import com.aex.platform.service.WebSocketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,8 @@ import java.util.*;
 /**
  * @author estar
  */
+
+@Log
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -117,19 +121,25 @@ public class UserRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@Valid @RequestBody User input, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody User input, BindingResult result) {
+        log.info(Constants.BAR);
+        log.info("Recibiendo solicitud de creacion de usuario...");
         if (result.hasErrors()) {
+            log.severe("Se encontraron errores" + result);
             return validar(result);
         }
         if (dataRepository.findByEmail(input.getEmail()).isPresent()) {
+            log.severe("El Correo electrónico ya esta registrado");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "El Correo electrónico ya esta registrado."));
         }
         if (dataRepository.findByNickname(input.getNickname()).isPresent()) {
+            log.severe("El Nickname ya esta registrado.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "El Nickname ya esta registrado."));
         }
         if (dataRepository.findByDocumentTypeAndDocumentNumber(input.getDocumentType(), input.getDocumentNumber()).isPresent()) {
+            log.severe("El Documento ya está registrado.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("error", "El Documento ya está registrado."));
         }
@@ -140,12 +150,14 @@ public class UserRestController {
         input.setFullName(input.getFirstName() + " " + input.getSecondName() + " " + input.getLastName() + " " + input.getSurname());
         input.setCreatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toString());
         input.setUpdatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toString());
+
         AuthenticationResponse token = service.register(input);
 
         if (input.getRole() == Role.CLIENT) {
+            log.info("Cliente creado.");
             return ResponseEntity.status(HttpStatus.CREATED).body(new UserAdapter(dataRepository.findByEmail(input.getEmail()).get()));
         }
-
+        log.info("Cliente creado.");
         return ResponseEntity.ok(token);
     }
 
@@ -200,7 +212,6 @@ public class UserRestController {
     }
     @GetMapping("/getBalance")
     public ResponseEntity<?> getBalance(@RequestParam Long userId) {
-        System.out.println(userId);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(Collections.singletonMap("user", balanceService.getBalance(userId)));
 

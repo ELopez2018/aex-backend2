@@ -93,7 +93,7 @@ public class Transaction  {
     @Column(name = "observations", length = 1000)
     public String observations;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "transaction")
-    private List<Voucher> voucherList;
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "transaction")
+//    private List<Voucher> voucherList;
 }

@@ -115,7 +115,7 @@ public class SecurityConfiguration {
     config.setAllowCredentials(true);
     config.setAllowedHeaders(Arrays.asList(HttpHeaders.CONTENT_TYPE, CorsConfigurationOrigin.AUTHORIZATION_HEADER
             , "Access-Control-Max-Age", "Access-Control-Allow-Methods", "Access-Control-Allow-Origin"
-            , "Access-Control-Allow-Headers", "Current-Ip"));
+            , "Access-Control-Allow-Headers"));
     config.setAllowedOrigins(corsConfigurationOrigin.getListAllowedOrigins());
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);

@@ -20,12 +20,12 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "mobile_payment_id")
     private MobilePayment mobilePayment;

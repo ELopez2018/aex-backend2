@@ -1,10 +1,11 @@
 package com.aex.platform.service;
 
+import com.aex.platform.common.Constants;
 import com.aex.platform.controllers.WebSocketClient;
 import com.aex.platform.entities.*;
 import com.aex.platform.repository.*;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.flogger.Flogger;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,24 +42,52 @@ public class TransactionService {
 
 
     public Boolean updateWebsocketTransactionsTodo(Collection<Long> statusIds) {
+        log.info(Constants.BAR);
+        log.info("Recibiendo  Ids " + statusIds);
         List<Transaction> giros = transactionsRepository.findAllByStatusIn(statusIds);
+        log.info(giros.size() + " GIROS ENCONTRADOS");
         List<MobilePayment> pagosMobiles = mobilePaymentRepository.findAllByStatusIn(statusIds);
-        List<TransactionTodo> arr =transactionTodoAdapter(giros, pagosMobiles);
-        log.info("Enviando datos al socket..");
-        return webSocketClient.transactionPending(arr);
+        log.info(pagosMobiles.size() + " PAGOS MOVILES ENCONTRADOS");
+        List<TransactionTodo> arr = transactionTodoAdapter(giros, pagosMobiles);
+        log.info(arr.size() + " TRANSACCIONES EN TOTAL");
+        if (arr.isEmpty()) {
+            log.info("No hay transacciones para enviar");
+            return false;
+        }
+        try {
+            if (statusIds.size() == 1) {
+                long statusId = statusIds.stream().findFirst().orElse(null);
+                if (statusId == 1L) {
+                    log.info("Estatus Recibido: Transacciones pendientes");
+                    log.info("Enviando datos al Socket");
+                    return webSocketClient.transactionPending(arr);
+                } else if (statusId == 6L) {
+                    log.info("Estatus Recibido:  Transacciones en Progreso");
+                    log.info("Enviando datos al Socket");
+                    return webSocketClient.transactionInProgress(arr);
+                }
+            }
+            return webSocketClient.transactionPending(arr);
+        } catch (FeignException e) {
+            log.severe("[updateWebsocketTransactionsTodo]:Error" + e.getMessage());
+            log.severe(e.getLocalizedMessage());
+            return false;
+        }
+
     }
 
     private List<TransactionTodo> transactionTodoAdapter(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
         List<TransactionTodo> transactionTodoList = new ArrayList<>();
-        for (MobilePayment item: pagosMobiles){
+        for (MobilePayment item : pagosMobiles) {
             transactionTodoList.add(convertMPToTtl(item));
         }
-        for (Transaction item: giros){
+        for (Transaction item : giros) {
             transactionTodoList.add(convertGiroToTtl(item));
         }
         return transactionTodoList;
     }
-    private TransactionTodo convertGiroToTtl(Transaction giro){
+
+    private TransactionTodo convertGiroToTtl(Transaction giro) {
         TransactionTodo ttdo = new TransactionTodo();
         ttdo.setBank(giro.getReceivingBank().getBank().getName());
         ttdo.setId(giro.getId());
@@ -67,10 +96,17 @@ public class TransactionService {
         ttdo.setStatus(giro.getStatus());
         ttdo.setValue(giro.getAmountReceived());
         ttdo.setTransactionType(1l);
-        return  ttdo;
+        ttdo.setBankAccount(giro.getReceivingBank().getAccountNumber());
+        ttdo.setType(giro.getReceivingBank().getType());
+        ttdo.setDni(giro.getRecipient().getDocumentNumber());
+        if (giro.getCashier() != null) {
+            ttdo.setCashierName(giro.getCashier().getFullName());
+            ttdo.setCashier(giro.getCashier().getId());
+        }
+        return ttdo;
     }
 
-    private TransactionTodo convertMPToTtl(MobilePayment mobilePayment){
+    private TransactionTodo convertMPToTtl(MobilePayment mobilePayment) {
         TransactionTodo ttdo = new TransactionTodo();
         ttdo.setId(mobilePayment.getId());
         ttdo.setTransactionType(2l);
@@ -80,11 +116,16 @@ public class TransactionService {
         ttdo.setCellPhone(mobilePayment.getCellPhoneNumber());
         ttdo.setStatus(mobilePayment.getStatus());
         ttdo.setValue(mobilePayment.getValueReceive());
-        return  ttdo;
+        ttdo.setDni(Long.valueOf(mobilePayment.getDocumentNumber()));
+        if (mobilePayment.getCashier() != null) {
+            ttdo.setCashierName(mobilePayment.getCashier().getFullName());
+            ttdo.setCashier(mobilePayment.getCashier().getId());
+        }
+        return ttdo;
     }
 
-    public  ResponseEntity<?> create(dtos.TransactionCreateDto[] data){
-        for(dtos.TransactionCreateDto item:data ){
+    public ResponseEntity<?> create(dtos.TransactionCreateDto[] data) {
+        for (dtos.TransactionCreateDto item : data) {
             Optional<User> clientO = userRepository.findById(item.getClientId());
             Optional<User> recipientO = userRepository.findById(item.getRecipientId());
             Optional<BankData> receivingBankO = bankDataRepository.findById(item.getReceivingBankId());
@@ -118,7 +159,12 @@ public class TransactionService {
             transaction.setReference(item.getReference());
             Transaction save = transactionsRepository.save(transaction);
         }
-       updateWebsocketTransactionsTodo(List.of(1L));
-        return  ResponseEntity.ok().body(Collections.singletonMap("message", "Se crearon los giros exitosamente"));
+        updateWebsocketTransactionsTodo(List.of(1L));
+        return ResponseEntity.ok().body(Collections.singletonMap("message", "Se crearon los giros exitosamente"));
+    }
+
+    public Transaction save(Transaction transaction) {
+        log.info("Guardando cambios");
+        return transactionsRepository.save(transaction);
     }
 }

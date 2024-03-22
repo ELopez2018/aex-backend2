@@ -64,7 +64,16 @@ public class MobilePayment extends EntityBase {
 //    private List<Voucher> voucherList;
 
     public User getClient() {
+        if(client == null){
+            return null;
+        }
         return new UserAdapter(client);
+    }
+    public User getCashier() {
+        if(cashier == null){
+            return null;
+        }
+        return new UserAdapter(cashier);
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package com.aex.platform.controllers;
 
+import com.aex.platform.common.Constants;
 import com.aex.platform.entities.*;
 import com.aex.platform.entities.dtos.MobilePaymentDto;
 import com.aex.platform.repository.*;
@@ -14,6 +15,7 @@ import com.aex.platform.service.WebSocketService;
 import dtos.TransactionCreateDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import java.util.*;
 /**
  * @author estar
  */
+@Log
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/transactions")
@@ -98,6 +101,29 @@ public class TransactionsRestController {
 
     @GetMapping("/ws/inbox-update/{statusIds}")
     private ResponseEntity<?> updateTransactions(@PathVariable Long[] statusIds) {
+        Map<String, String> errores = new HashMap<>();
+        try {
+            if (webSocketService.updateInfoWebSocket(statusIds)) {
+                return ResponseEntity.ok().body(Collections.singletonMap("message", "Actualización exitosa"));
+            } else {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Un error impidio la consulta"));
+            }
+        } catch (Exception e) {
+            errores.put("message", e.toString());
+            errores.put("details", e.getMessage());
+            return ResponseEntity.badRequest().body(errores);
+        }
+
+    }
+    @PatchMapping(value = "/update-status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateStatus(@RequestBody TransactionTodo transactionTodo) {
+        log.info(Constants.BAR);
+        log.info("Peticion de actualizacio parcial recibida");
+        return ResponseEntity.ok().body(mobilePaymentService.updateStatusTransaction(transactionTodo));
+    }
+
+    @GetMapping("/all/bystatus/{statusIds}")
+    private ResponseEntity<?> getAllByStatus(@PathVariable Long[] statusIds) {
         Map<String, String> errores = new HashMap<>();
         try {
             if (webSocketService.updateInfoWebSocket(statusIds)) {

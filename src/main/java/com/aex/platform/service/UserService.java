@@ -8,10 +8,12 @@ import com.aex.platform.token.Token;
 import com.aex.platform.token.TokenRepository;
 import com.aex.platform.token.TokenType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Log
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,6 +24,7 @@ public class UserService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(User request) {
+    log.info("Creando cliente");
     User user;
     user = User.builder()
         .nickname(request.getNickname())
