@@ -43,9 +43,9 @@ services:
   aex-system:
     container_name: aex-system
     image: estarlinlopez/aex
-#    build:
-#      context: ./
-#      dockerfile: ./Dockerfile
+    #    build:
+    #      context: ./
+    #      dockerfile: ./Dockerfile
     ports:
       - "7000:7000"
     environment:
@@ -59,6 +59,8 @@ services:
     depends_on:
       - postgres15
     restart: always
+    volumes:
+      - /var/www/html/downloads/vouchers:/vouchers
   aex-socket:
     container_name: aex-socket
     image: estarlinlopez/aex_socket
@@ -74,6 +76,8 @@ volumes:
     name: data-postgres
   data-mysql:
     name: data-mysql
+  aex-system-files:
+    name: /var/www/html/downloads/vouchers
 
 networks:
   aex:

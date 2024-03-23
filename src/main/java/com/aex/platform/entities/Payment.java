@@ -62,9 +62,6 @@ public class Payment {
     @Column(name = "verified_by")
     public String verifiedBy;
 
-    @Column(name = "currency")
-    public String currency;
-
     @Column(name = "created_at")
     public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));
 
@@ -73,6 +70,10 @@ public class Payment {
 
     @Column(name = "deleted_at")
     public LocalDateTime deletedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     public User getUser() {
         if(user == null){

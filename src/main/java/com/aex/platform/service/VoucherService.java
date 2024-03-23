@@ -90,7 +90,7 @@ public class VoucherService implements VoucherInterface {
             voucher.setMain(voucherDto.getMain());
             voucher.setObservations(voucherDto.getObservations());
             try {
-                voucher.setImage(fileStorageService.save(voucherDto.getImage()[0], transactionOptional.get().getClient().getDocumentNumber().toString(), voucherDto.getTransactionId()).toAbsolutePath().toString());
+                voucher.setImage(fileStorageService.save("/vouchers", voucherDto.getImage()[0], transactionOptional.get().getClient().getDocumentNumber().toString(), voucherDto.getTransactionId()).toAbsolutePath().toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -104,7 +104,7 @@ public class VoucherService implements VoucherInterface {
             voucher.setMain(voucherDto.getMain());
             voucher.setObservations(voucherDto.getObservations());
             try {
-                voucher.setImage(fileStorageService.save(voucherDto.getImage()[0], mobilePaymentOptional.get().getClient().getDocumentNumber().toString(), voucherDto.getTransactionId()).toAbsolutePath().toString());
+                voucher.setImage(fileStorageService.save("/vouchers", voucherDto.getImage()[0], mobilePaymentOptional.get().getClient().getDocumentNumber().toString(), voucherDto.getTransactionId()).toAbsolutePath().toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

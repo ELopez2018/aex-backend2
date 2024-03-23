@@ -5,6 +5,7 @@ import com.aex.platform.interfaces.PaymentInterface;
 import com.aex.platform.repository.PaymentsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PaymentsService implements PaymentInterface {
+
+
+    private final FileStorageService fileStorageService;
+
     private final PaymentsRepository paymentsRepository;
     @Override
     public Payment save(Payment payment) {
