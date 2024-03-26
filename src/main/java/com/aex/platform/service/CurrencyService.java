@@ -32,7 +32,7 @@ public class CurrencyService implements CurrencyInterface {
 
     @Override
     public List<Currency> findAll() {
-        return null;
+        return currencyRepository.findAll();
     }
 
     @Override

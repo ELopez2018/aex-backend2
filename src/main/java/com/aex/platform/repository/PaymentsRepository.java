@@ -17,7 +17,8 @@ public interface PaymentsRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT SUM(p.amount) FROM Payment p "
             + "WHERE 1=1 "
             + "AND p.user.id = :userId "
-            + "AND p.approved is not null"
+            + "AND p.currency.id = :currencyId "
+            + "AND p.approved = 'aprobado' "
     )
-    Double getPaymentsTotal(@Param("userId") Long userId);
+    Double getPaymentsTotal(@Param("userId") Long userId, @Param("currencyId") Long currencyId );
 }

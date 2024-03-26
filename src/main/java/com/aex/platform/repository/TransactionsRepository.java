@@ -30,8 +30,15 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
   @Query("SELECT SUM(t.amountSent) FROM Transaction t "
           + "WHERE 1=1 "
           + "AND t.correspondent.user.id = :userId "
+          + "AND t.currencyFrom = :currency "
           + "AND t.status <> 3"
   )
-  Double getTransactionTotal(@Param("userId") Long userId);
-
+  Double getTransactionTotal(@Param("userId") Long userId,  @Param("currency") String currency);
+  @Query("SELECT SUM(t.amountReceived) FROM Transaction t "
+          + "WHERE 1=1 "
+          + "AND t.cashier.id = :cashierId "
+          + "AND t.status = 2 "
+          + "AND t.currencyTo = :currency "
+  )
+  Double getTransactionTotalCashierByCurrency(@Param("cashierId") Long cashierId, @Param("currency") String currency);
 }

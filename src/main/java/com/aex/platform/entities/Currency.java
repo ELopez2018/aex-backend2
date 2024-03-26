@@ -26,7 +26,4 @@ public class Currency {
     @Column(name ="active")
     private Boolean active;
 
-    @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
-    private List<Payment> payments;
-
 }

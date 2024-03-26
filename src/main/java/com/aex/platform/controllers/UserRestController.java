@@ -7,6 +7,7 @@ package com.aex.platform.controllers;
 import com.aex.platform.auth.AuthenticationResponse;
 import com.aex.platform.common.Constants;
 import com.aex.platform.common.Utils;
+import com.aex.platform.entities.Currency;
 import com.aex.platform.entities.Role;
 import com.aex.platform.entities.Transaction;
 import com.aex.platform.entities.User;
@@ -211,9 +212,9 @@ public class UserRestController {
         return ResponseEntity.badRequest().body(errores);
     }
     @GetMapping("/getBalance")
-    public ResponseEntity<?> getBalance(@RequestParam Long userId) {
+    public ResponseEntity<?> getBalance(@RequestParam Long userId, @RequestParam Long currencyId) {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(Collections.singletonMap("user", balanceService.getBalance(userId)));
+                    .body(Collections.singletonMap("user", balanceService.getBalance(userId, currencyId)));
 
     }
 
