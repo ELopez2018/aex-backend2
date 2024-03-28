@@ -69,10 +69,10 @@ public class Transaction  {
     @Column(name = "date_Receive")
     private Long dateReceive;
 
-    @Column(name = "Currency_From")
+    @Column(name = "currency_from")
     private String currencyFrom;
 
-    @Column(name = "Currency_To")
+    @Column(name = "currency_to")
     private String currencyTo;
 
     @Column(name = "amount_received")

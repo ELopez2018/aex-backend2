@@ -56,11 +56,14 @@ public class Payment {
     @Column(name = "amount")
     private Double amount;
 
-    @Column(name = "approved")
-    public String approved;
+    @Column(name = "status")
+    public String status;
 
     @Column(name = "verified_by")
     public String verifiedBy;
+
+    @Column(name = "currency")
+    public String currencyCode;
 
     @Column(name = "created_at")
     public LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("America/Bogota"));

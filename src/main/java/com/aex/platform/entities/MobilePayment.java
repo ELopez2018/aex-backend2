@@ -34,6 +34,12 @@ public class MobilePayment extends EntityBase {
     @Column(name ="trm", nullable = true)
     private Integer trm;
 
+    @Column(name = "currency_from")
+    private String currencyFrom;
+
+    @Column(name = "currency_to")
+    private String currencyTo;
+
     @Column(name ="value_receive")
     private Double valueReceive;
 

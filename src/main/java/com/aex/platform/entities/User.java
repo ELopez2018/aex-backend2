@@ -4,7 +4,6 @@
  */
 package com.aex.platform.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,9 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author estar
@@ -80,6 +77,9 @@ public class User {
 
   @Column(name = "current_country_id", nullable = true)
   private Long currentCountry;
+
+  @Column(name = "currency_id", nullable = true)
+  private Long currency;
 
   @Column(name = "email")
   @NotNull(message = "EL Email es obligatorio")

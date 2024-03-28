@@ -37,5 +37,7 @@ public class UserDTO {
   private Double maximumAmount;
   private Double balance;
   private Boolean postpaid;
+  private Long currentCountry;
+  private Long currency;
   private List<BankData> bankData;
 }

@@ -27,7 +27,7 @@ public class CurrencyService implements CurrencyInterface {
 
     @Override
     public Optional<Currency> findByCurrencyId(Long currencyId) {
-        return Optional.empty();
+        return currencyRepository.findById(currencyId);
     }
 
     @Override

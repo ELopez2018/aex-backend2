@@ -125,4 +125,14 @@ public class UserAdapter extends User {
   public List<BankData> getBankDataList() {
     return user.getBankDataList();
   }
+
+  @Override
+  public Long getCurrentCountry() {
+    return user.getCurrentCountry();
+  }
+
+  @Override
+  public Long getCurrency() {
+    return user.getCurrency();
+  }
 }
