@@ -76,7 +76,7 @@ public class TransactionService {
 
     }
 
-    private List<TransactionTodo> transactionTodoAdapter(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
+    public List<TransactionTodo> transactionTodoAdapter(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
         List<TransactionTodo> transactionTodoList = new ArrayList<>();
         for (MobilePayment item : pagosMobiles) {
             transactionTodoList.add(convertMPToTtl(item));
@@ -86,7 +86,16 @@ public class TransactionService {
         }
         return transactionTodoList;
     }
-
+    public List<TransactionTodo> transactionTodoAdapterByCorrespondent(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
+        List<TransactionTodo> transactionTodoList = new ArrayList<>();
+        for (MobilePayment item : pagosMobiles) {
+            transactionTodoList.add(convertMobiPayToTdoCorrespondent(item));
+        }
+        for (Transaction item : giros) {
+            transactionTodoList.add(convertGiroToTdoCorrespondent(item));
+        }
+        return transactionTodoList;
+    }
     private TransactionTodo convertGiroToTtl(Transaction giro) {
         TransactionTodo ttdo = new TransactionTodo();
         ttdo.setBank(giro.getReceivingBank().getBank().getName());
@@ -99,6 +108,7 @@ public class TransactionService {
         ttdo.setBankAccount(giro.getReceivingBank().getAccountNumber());
         ttdo.setType(giro.getReceivingBank().getType());
         ttdo.setDni(giro.getRecipient().getDocumentNumber());
+        ttdo.setVoucher(giro.getVoucher());
         if (giro.getCashier() != null) {
             ttdo.setCashierName(giro.getCashier().getFullName());
             ttdo.setCashier(giro.getCashier().getId());
@@ -117,13 +127,51 @@ public class TransactionService {
         ttdo.setStatus(mobilePayment.getStatus());
         ttdo.setValue(mobilePayment.getValueReceive());
         ttdo.setDni(Long.valueOf(mobilePayment.getDocumentNumber()));
+        ttdo.setVoucher(mobilePayment.getVoucher());
         if (mobilePayment.getCashier() != null) {
             ttdo.setCashierName(mobilePayment.getCashier().getFullName());
             ttdo.setCashier(mobilePayment.getCashier().getId());
         }
         return ttdo;
     }
+    private TransactionTodo convertGiroToTdoCorrespondent(Transaction giro) {
+        TransactionTodo ttdo = new TransactionTodo();
+        ttdo.setBank(giro.getReceivingBank().getBank().getName());
+        ttdo.setId(giro.getId());
+        ttdo.setCorrespondent(giro.getCorrespondent().getTradename());
+        ttdo.setBenficiary(giro.getRecipient().getFullName());
+        ttdo.setStatus(giro.getStatus());
+        ttdo.setValue(giro.getAmountSent());
+        ttdo.setTransactionType(1l);
+        ttdo.setBankAccount(giro.getReceivingBank().getAccountNumber());
+        ttdo.setType(giro.getReceivingBank().getType());
+        ttdo.setDni(giro.getRecipient().getDocumentNumber());
+        ttdo.setVoucher(giro.getVoucher());
+        if (giro.getCashier() != null) {
+            ttdo.setCashierName(giro.getCashier().getFullName());
+            ttdo.setCashier(giro.getCashier().getId());
+        }
+        return ttdo;
+    }
 
+    private TransactionTodo convertMobiPayToTdoCorrespondent(MobilePayment mobilePayment) {
+        TransactionTodo ttdo = new TransactionTodo();
+        ttdo.setId(mobilePayment.getId());
+        ttdo.setTransactionType(2l);
+        ttdo.setBank(mobilePayment.getBank().getName());
+        ttdo.setCorrespondent(mobilePayment.getCorrespondent().getTradename());
+        ttdo.setBenficiary(mobilePayment.getDocumentNumber());
+        ttdo.setCellPhone(mobilePayment.getCellPhoneNumber());
+        ttdo.setStatus(mobilePayment.getStatus());
+        ttdo.setValue(mobilePayment.getValueToSend());
+        ttdo.setDni(Long.valueOf(mobilePayment.getDocumentNumber()));
+        ttdo.setVoucher(mobilePayment.getVoucher());
+        if (mobilePayment.getCashier() != null) {
+            ttdo.setCashierName(mobilePayment.getCashier().getFullName());
+            ttdo.setCashier(mobilePayment.getCashier().getId());
+        }
+        return ttdo;
+    }
     public ResponseEntity<?> create(dtos.TransactionCreateDto[] data) {
         for (dtos.TransactionCreateDto item : data) {
             Optional<User> clientO = userRepository.findById(item.getClientId());

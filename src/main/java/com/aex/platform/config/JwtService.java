@@ -3,6 +3,7 @@ package com.aex.platform.config;
 import com.aex.platform.entities.User;
 import com.aex.platform.entities.UserDetailsImpl;
 import com.aex.platform.entities.dtos.UserAdapter;
+import com.aex.platform.service.MenuService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,12 +16,13 @@ import java.util.Map;
 import java.util.function.Function;
 
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-@Log
 @Service
+@Log
 public class JwtService {
 
   @Value("${application.security.jwt.secret-key}")
@@ -29,6 +31,9 @@ public class JwtService {
   private long jwtExpiration;
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
+
+  @Autowired
+  private MenuService menuService;
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
@@ -65,7 +70,9 @@ public class JwtService {
     log.info("Construyendo token");
     UserDetails userDetails = new UserDetailsImpl(user);
     Map<String, Object> claims = new HashMap<>();
-    extraClaims.put("user", new UserAdapter(user));
+    User user1 = menuService.getUserWithMenus(user.getId());
+    extraClaims.put("user", user1);
+//    extraClaims.put("modules", new UserAdapter(user).getMenu());
     return Jwts
             .builder()
             .setClaims(extraClaims)

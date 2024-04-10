@@ -22,7 +22,7 @@ public interface PaymentInterface {
     boolean deleteAll(List<Long> Ids);
     Payment update(Payment payment);
 
-    List<PaymentResumeDto> getResumePayments(Long userId);
+    List<PaymentResumeDto> getGeneralResume(Long userId);
 
     List<Payment> findAllByUserIdAndCurrencyId(Long userId, Long currecyId);
 }

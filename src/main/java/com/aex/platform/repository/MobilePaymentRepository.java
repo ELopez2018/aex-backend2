@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface MobilePaymentRepository extends JpaRepository<MobilePayment, Long> {
 
@@ -26,7 +27,23 @@ public interface MobilePaymentRepository extends JpaRepository<MobilePayment, Lo
             + "WHERE 1=1 "
             + "AND mp.cashier.id= :userId "
             + "AND mp.currencyTo= :currencyCode "
-            + "AND mp.status = 2"
+            + "AND mp.status  <> 3"
     )
     Double getMobilePaymentnByCashier(@Param("userId") Long userId, @Param("currencyCode") String currencyCode );
+
+    @Query("SELECT mp FROM MobilePayment mp "
+            + "WHERE 1=1 "
+            + "AND mp.cashier.id= :userId "
+            + "AND mp.currencyTo= :currencyCode "
+            + "AND mp.status  <> 3"
+    )
+    Optional<List<MobilePayment>> getAllMobilePaymentnByCashier(@Param("userId") Long userId, @Param("currencyCode") String currencyCode );
+
+    @Query("SELECT mp FROM MobilePayment mp "
+            + "WHERE 1=1 "
+            + "AND mp.correspondent.user.id= :userId "
+            + "AND mp.currencyFrom= :currencyCode "
+            + "AND mp.status  <> 3"
+    )
+    Optional<List<MobilePayment>> getAllMobilePaymentnByCorrespondent(@Param("userId") Long userId, @Param("currencyCode") String currencyCode );
 }

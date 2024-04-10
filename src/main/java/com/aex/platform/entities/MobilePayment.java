@@ -49,6 +49,13 @@ public class MobilePayment extends EntityBase {
     @Column(name = "status",nullable = true)
     private Long status;
 
+    @Column(name = "type",nullable = true)
+    private String type;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "mobile_payment_id")  // Esta columna se agregará a la tabla de libros
+    private List<Voucher> voucher;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
@@ -64,10 +71,6 @@ public class MobilePayment extends EntityBase {
     @ManyToOne
     @JoinColumn(name = "correspondent_id")
     private Correspondent correspondent;
-
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "mobilePayment")
-//    private List<Voucher> voucherList;
 
     public User getClient() {
         if(client == null){

@@ -62,9 +62,12 @@ public class UserRestController {
     @Autowired
     BalanceService balanceService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping()
-    public ResponseEntity<?> findAll() {
-        List<UserAdapter> list = utils.userAdapterList(dataRepository.findAll());
+    public ResponseEntity<?> findAll(Pageable pageable) {
+        List<UserAdapter> list = utils.userAdapterList(userService.findAll(pageable));
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
@@ -213,6 +216,8 @@ public class UserRestController {
     }
     @GetMapping("/getBalance")
     public ResponseEntity<?> getBalance(@RequestParam Long userId, @RequestParam Long currencyId) {
+        log.info(Constants.BAR);
+        log.info("Peticion get a /users/getBalance Recibida");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(Collections.singletonMap("user", balanceService.getBalance(userId, currencyId)));
 

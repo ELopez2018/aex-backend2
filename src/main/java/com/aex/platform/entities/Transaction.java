@@ -93,6 +93,11 @@ public class Transaction  {
     @Column(name = "observations", length = 1000)
     public String observations;
 
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "transaction_id")
+    private List<Voucher> voucher;
+
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "transaction")
 //    private List<Voucher> voucherList;

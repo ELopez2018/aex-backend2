@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -37,8 +38,24 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
   @Query("SELECT SUM(t.amountReceived) FROM Transaction t "
           + "WHERE 1=1 "
           + "AND t.cashier.id = :cashierId "
-          + "AND t.status = 2 "
+          + "AND t.status <> 3 "
           + "AND t.currencyTo = :currency "
   )
   Double getTransactionTotalCashierByCurrency(@Param("cashierId") Long cashierId, @Param("currency") String currency);
+
+  @Query("SELECT t FROM Transaction t "
+          + "WHERE 1=1 "
+          + "AND t.cashier.id = :cashierId "
+          + "AND t.status <> 3 "
+          + "AND t.currencyTo = :currency "
+  )
+  Optional<List<Transaction>> getTransactionByCashierByCurrency(@Param("cashierId") Long cashierId, @Param("currency") String currency);
+
+  @Query("SELECT t FROM Transaction t "
+          + "WHERE 1=1 "
+          + "AND t.correspondent.user.id = :userId "
+          + "AND t.currencyFrom = :currency "
+          + "AND t.status <> 3"
+  )
+  Optional<List<Transaction>>  getTransactionByCorrespondentByCurrency(@Param("userId") Long userId,  @Param("currency") String currency);
 }

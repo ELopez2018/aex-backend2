@@ -69,10 +69,9 @@ public class PaymentsService implements PaymentInterface {
     }
 
     @Override
-    public List<PaymentResumeDto> getResumePayments(Long userId) {
-        List<PaymentResumeDto> resumePayment  = paymentsRepository.getResumePayments(userId);
-        List<PaymentResumeDto> resumePayment2 = balanceService.getBalanceCashier(userId);
-        return resumePayment2;
+    public List<PaymentResumeDto> getGeneralResume(Long userId) {
+        List<PaymentResumeDto> resumePayment = balanceService.getGeneralResume(userId);
+        return resumePayment;
     }
 
     @Override

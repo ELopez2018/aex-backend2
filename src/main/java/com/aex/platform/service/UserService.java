@@ -9,9 +9,15 @@ import com.aex.platform.token.TokenRepository;
 import com.aex.platform.token.TokenType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Log
 @Service
@@ -72,5 +78,9 @@ public class UserService {
         .revoked(false)
         .build();
     tokenRepository.save(token);
+  }
+
+  public Page<User> findAll(Pageable pageable) {
+    return repository.findAll(pageable);
   }
 }

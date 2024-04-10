@@ -100,7 +100,7 @@ public class PaymentsRestController {
     ) {
         log.info(Constants.BAR);
         log.info("Peticion get a /payments/resume Recibida");
-        return ResponseEntity.ok().body(paymentsService.getResumePayments(userId));
+        return ResponseEntity.ok().body(paymentsService.getGeneralResume(userId));
     }
 
     @GetMapping("/all/by-user")
