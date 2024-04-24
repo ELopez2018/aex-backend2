@@ -42,18 +42,17 @@ public class BalanceService {
         Double transactionsTotal = 0.0;
         Double mobilePaymentsTotal = 0.0;
 
-        Currency currency = currencyRepository.findById(currencyId).get();
-
-        if (paymentsRepository.getPaymentsTotal(userId, currency.getId()) != null) {
+        Currency currency = currencyRepository.findById(currencyId).orElse(null);
+        if (currency != null && paymentsRepository.getPaymentsTotal(userId, currency.getId()) != null) {
             paymentsTotal = paymentsRepository.getPaymentsTotal(userId, currency.getId());
         }
         log.info("Pagos totales: " + paymentsTotal);
-        if (transactionsRepository.getTransactionTotal(userId, currency.getCode()) != null) {
+        if (currency != null && transactionsRepository.getTransactionTotal(userId, currency.getCode()) != null) {
             transactionsTotal = transactionsRepository.getTransactionTotal(userId, currency.getCode());
         }
         log.info("Giros totales: " + transactionsTotal);
 
-        if (mobilePaymentRepository.getMobilePaymentnTotal(userId, currency.getCode()) != null) {
+        if (currency != null && mobilePaymentRepository.getMobilePaymentnTotal(userId, currency.getCode()) != null) {
             mobilePaymentsTotal = mobilePaymentRepository.getMobilePaymentnTotal(userId, currency.getCode());
         }
         log.info("Pago Movil totales: " + mobilePaymentsTotal);
@@ -155,24 +154,25 @@ public class BalanceService {
         Currency currency = currencyRepository.findById(currencyId).get();
         log.info("Obteniendo lista de giros como cajero");
        Optional<List<Transaction>> optionalTransactions = transactionsRepository.getTransactionByCashierByCurrency(userId,currency.getCode());
-        log.info("Registros bobtenidos: " + optionalTransactions.get().size());
-
+        log.info("Registros obtenidos: " + optionalTransactions.get().size());
+        log.info("");
         log.info("Obteniendo lista de Pagos Moviles como cajero");
         Optional<List<MobilePayment>> optionalMobilePayments = mobilePaymentRepository.getAllMobilePaymentnByCashier(userId,currency.getCode());
         log.info("Registros obtenidos: " + optionalMobilePayments.get().size());
-
+        log.info("");
         transactionTodoList = transactionService.transactionTodoAdapter(optionalTransactions.get(), optionalMobilePayments.get());
 
         log.info("Obteniendo lista de giros como corresponsal");
         Optional<List<Transaction>> optionalTransactionList = transactionsRepository.getTransactionByCorrespondentByCurrency(userId, currency.getCode());
         log.info("Registros obtenidos: " + optionalTransactionList.get().size());
+        log.info("");
 
         log.info("Obteniendo lista de Pagos Moviles como corresponsal");
         log.info("userId: " + userId);
         log.info("currencyCode: " + currency.getCode());
         List<MobilePayment> mobilePaymentsTodoCorrespond = mobilePaymentRepository.getAllMobilePaymentnByCorrespondent(userId, currency.getCode()).get();
         log.info("Registros obtenidos: " + mobilePaymentsTodoCorrespond.size());
-
+        log.info("");
 
         List<TransactionTodo> transactionTodoCorrespond = transactionService.transactionTodoAdapterByCorrespondent(optionalTransactionList.get(), mobilePaymentsTodoCorrespond );
         transactionTodoList.addAll(transactionTodoCorrespond);

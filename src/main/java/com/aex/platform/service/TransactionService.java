@@ -5,6 +5,7 @@ import com.aex.platform.controllers.WebSocketClient;
 import com.aex.platform.entities.*;
 import com.aex.platform.repository.*;
 import feign.FeignException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class TransactionService {
     @Autowired
     CorrespondentRepository correspondentRepository;
 
+    @Autowired
+    NotificationsService notificationsService;
+    ;
 
     public Boolean updateWebsocketTransactionsTodo(Collection<Long> statusIds) {
         log.info(Constants.BAR);
@@ -86,6 +90,7 @@ public class TransactionService {
         }
         return transactionTodoList;
     }
+
     public List<TransactionTodo> transactionTodoAdapterByCorrespondent(List<Transaction> giros, List<MobilePayment> pagosMobiles) {
         List<TransactionTodo> transactionTodoList = new ArrayList<>();
         for (MobilePayment item : pagosMobiles) {
@@ -96,6 +101,7 @@ public class TransactionService {
         }
         return transactionTodoList;
     }
+
     private TransactionTodo convertGiroToTtl(Transaction giro) {
         TransactionTodo ttdo = new TransactionTodo();
         ttdo.setBank(giro.getReceivingBank().getBank().getName());
@@ -134,6 +140,7 @@ public class TransactionService {
         }
         return ttdo;
     }
+
     private TransactionTodo convertGiroToTdoCorrespondent(Transaction giro) {
         TransactionTodo ttdo = new TransactionTodo();
         ttdo.setBank(giro.getReceivingBank().getBank().getName());
@@ -172,7 +179,8 @@ public class TransactionService {
         }
         return ttdo;
     }
-    public ResponseEntity<?> create(dtos.TransactionCreateDto[] data) {
+
+    public ResponseEntity<?> create(dtos.TransactionCreateDto[] data) throws MessagingException {
         for (dtos.TransactionCreateDto item : data) {
             Optional<User> clientO = userRepository.findById(item.getClientId());
             Optional<User> recipientO = userRepository.findById(item.getRecipientId());
@@ -192,7 +200,6 @@ public class TransactionService {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Collections.singletonMap("error", "No posee suficiente saldo para realizar esta operacion." + (correspondent.getUser().getMaximumAmount() + (correspondent.getUser().getBalance() - item.getAmountSent()))));
             }
-
             Transaction transaction = new Transaction();
             transaction.setClient(clientO.get());
             transaction.setRecipient(recipientO.get());
@@ -205,8 +212,11 @@ public class TransactionService {
             transaction.setCurrencyFrom(item.getCurrencyFrom());
             transaction.setCurrencyTo(item.getCurrencyTo());
             transaction.setReference(item.getReference());
-            Transaction save = transactionsRepository.save(transaction);
+            transactionsRepository.save(transaction);
+            notificationsService.sendNotificationToBenficiaryTIProgress(clientO.get());
         }
+        notificationsService.sendNotificationToCashiers(data.length);
+        log.info("Actualizando bandeja de transacciones en el socket");
         updateWebsocketTransactionsTodo(List.of(1L));
         return ResponseEntity.ok().body(Collections.singletonMap("message", "Se crearon los giros exitosamente"));
     }

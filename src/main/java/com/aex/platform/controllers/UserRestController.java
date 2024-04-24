@@ -7,24 +7,23 @@ package com.aex.platform.controllers;
 import com.aex.platform.auth.AuthenticationResponse;
 import com.aex.platform.common.Constants;
 import com.aex.platform.common.Utils;
-import com.aex.platform.entities.Currency;
 import com.aex.platform.entities.Role;
 import com.aex.platform.entities.Transaction;
 import com.aex.platform.entities.User;
 import com.aex.platform.entities.dtos.UserAdapter;
 import com.aex.platform.repository.TransactionsRepository;
 import com.aex.platform.repository.UserRepository;
-import com.aex.platform.service.ApiService;
-import com.aex.platform.service.BalanceService;
-import com.aex.platform.service.UserService;
-import com.aex.platform.service.WebSocketService;
+import com.aex.platform.service.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -64,6 +63,17 @@ public class UserRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    NotificationsService notificationsService;
+
+//    @GetMapping()
+//    public ResponseEntity<?> findAll(Pageable pageable) {
+//        log.info(Constants.BAR);
+//        log.info("Peticion get a /users Recibida");
+//        List<UserAdapter> list = utils.userAdapterList(userService.findAll(pageable));
+//        return ResponseEntity.status(HttpStatus.OK).body(list);
+//    }
 
     @GetMapping()
     public ResponseEntity<?> findAll(Pageable pageable) {
@@ -199,7 +209,7 @@ public class UserRestController {
     @GetMapping("/search/custom")
     public ResponseEntity<?> findUserCustom(@RequestParam String query, @RequestParam Long documentNumber, Pageable pageable) {
         Page<User> userOptional = dataRepository.findAllUserCustom(documentNumber, query, pageable);
-        if (! userOptional.isEmpty()) {
+        if (!userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(userOptional);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -214,12 +224,33 @@ public class UserRestController {
         });
         return ResponseEntity.badRequest().body(errores);
     }
+
     @GetMapping("/getBalance")
     public ResponseEntity<?> getBalance(@RequestParam Long userId, @RequestParam Long currencyId) {
         log.info(Constants.BAR);
         log.info("Peticion get a /users/getBalance Recibida");
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(Collections.singletonMap("user", balanceService.getBalance(userId, currencyId)));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Collections.singletonMap("user", balanceService.getBalance(userId, currencyId)));
+
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> emailTest() throws MessagingException {
+        log.info(Constants.BAR);
+        log.info("Peticion get a email/test Recibida");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Collections.singletonMap("user", "email enviado"));
+
+    }
+
+    @GetMapping("/test/new-giro")
+    public ResponseEntity<?> emailTestNewGiro() throws MessagingException {
+        log.info(Constants.BAR);
+        log.info("Peticion get a email/test Recibida");
+        User user = dataRepository.findById(141L).get();
+        notificationsService.sendNotificationToBenficiaryTIProgress(user);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Collections.singletonMap("user", "email enviado"));
 
     }
 

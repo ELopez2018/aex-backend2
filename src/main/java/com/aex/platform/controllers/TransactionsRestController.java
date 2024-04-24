@@ -14,6 +14,7 @@ import com.aex.platform.service.TransactionService;
 import com.aex.platform.service.WebSocketService;
 import dtos.TransactionCreateDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class TransactionsRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody TransactionCreateDto[] data) {
+    public ResponseEntity<?> post(@RequestBody TransactionCreateDto[] data) throws MessagingException {
         return transactionService.create(data);
     }
 
